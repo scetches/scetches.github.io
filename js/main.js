@@ -43,6 +43,8 @@ const joinBtn = document.getElementById('joinButton');
 let roomName = location.hash.slice(1);
 let userName = localStorage.getItem('userName');
 let offset = canvasContainer.getBoundingClientRect();
+let fabSize = {};
+
 
 let lastTouches = {};
 
@@ -99,7 +101,6 @@ joinBtn.addEventListener('click', (e) => {
 });
 
 fab.addEventListener('mousedown', fabMove, false);
-fab.addEventListener('mouseup', fabMove);
 document.addEventListener('mousemove', fabMove);
 document.addEventListener('mouseup', fabMove);
 
@@ -210,40 +211,38 @@ if(roomName.length == 0){
 
 function fabMove(e){
   let el = fab.MaterialButton.element_;
-  let elSize = el.getBoundingClientRect();
-  if(e.type == 'touchstart' || e.type == 'mousedown'){
-    //start
-    el.dataset.moveStart = true;
-    el.dataset.moving = true;
-  } else if(e.type == 'touchend' || e.type == 'mouseup'){
-    //stop
-    if(e.type == 'mouseup' && el.dataset.moveStart == 'true'){
-      let drawerBtn = document.getElementsByClassName('mdl-layout__drawer-button')[0];
-      let ev = document.createEvent('MouseEvents');
-      ev.initEvent('click', true, true);
-      drawerBtn.dispatchEvent(ev);
+    if(e.type == 'touchstart' || e.type == 'mousedown'){
+      //start
+      el.dataset.moveStart = true;
+      el.dataset.moving = true;
+    } else if(e.type == 'touchend' || e.type == 'mouseup'){
+      //stop
+      if(e.type == 'mouseup' && el.dataset.moveStart == 'true'){
+        let drawerBtn = document.getElementsByClassName('mdl-layout__drawer-button')[0];
+        let ev = document.createEvent('MouseEvents');
+        ev.initEvent('click', true, true);
+        drawerBtn.dispatchEvent(ev);
+      }
+      el.dataset.moveStart = false;
+      el.dataset.moving = false;
+    } else if(el.dataset.moving == 'true'){
+      //move it
+      let x;
+      let y;
+      if(e.type.indexOf('mouse') != -1){
+        //mouse
+        x = e.clientX - fabSize.width/2;
+        y = e.clientY - fabSize.height/2;
+      } else {
+        //touch
+        x = e.changedTouches[0].clientX - fabSize.width/2;
+        y = e.changedTouches[0].clientY - fabSize.height/2;
+      }
+      el.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+      el.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
+      el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
+      el.dataset.moveStart = false;
     }
-    el.dataset.moveStart = false;
-    el.dataset.moving = false;
-  } else if(el.dataset.moving == 'true'){
-    //move it
-    let x;
-    let y;
-    if(e.type.indexOf('mouse') != -1){
-      //mouse
-      x = e.clientX - elSize.width/2;
-      y = e.clientY - elSize.height/2;
-    } else {
-      //touch
-      x = e.changedTouches[0].clientX - elSize.width/2;
-      y = e.changedTouches[0].clientY - elSize.height/2;
-    }
-    el.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-    el.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
-    el.style.msTransform = 'translate(' + x + 'px, ' + y + 'px)';
-    el.dataset.moveStart = false;
-  }
-
 };
 
 function pickerChange(e){
@@ -329,9 +328,9 @@ function canvasContainerOnMouse(e) {
 
 function resetFab(e){
   let el = fab.MaterialButton.element_;
-  let offset = fab.getBoundingClientRect();
-  let x = offset.width * 2;
-  let y = offset.height * 2;
+  fabSize = el.getBoundingClientRect();
+  let x = fabSize.width * 2;
+  let y = fabSize.height * 2;
   el.style.transform = 'translate(' + (document.body.clientWidth - x) + 'px, ' + (document.body.clientHeight - y) + 'px)';
   el.style.webkitTransform = 'translate(' + (document.body.clientWidth - x) + 'px, ' + (document.body.clientHeight - y) + 'px)';
   el.style.msTransform = 'translate(' + (document.body.clientWidth - x) + 'px, ' + (document.body.clientHeight - y) + 'px)';

@@ -79,15 +79,17 @@ class Layer extends EventEmitter{
     const dist = Math.sqrt(Math.pow(value.to.x - value.from.x, 2) + Math.pow(value.to.y - value.from.y, 2));
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
-    const increment = Math.min(value.brush.size*value.brush.width, value.brush.size*value.brush.height);
     const brushSource = this.brush.fromObject(value.brush);
-    var i = 0;
+    let increment = Math.min(value.brush.size*value.brush.width, value.brush.size*value.brush.height)/10;
+
+    increment = (increment < 2 ? 2 : increment);
+
     ctx.save();
     ctx.globalCompositeOperation = value.brush.erase?"destination-out":value.brush.compositeOperation;
     if(dist <= 0){
       ctx.drawImage(brushSource,  value.from.x - brushSource.width/2, value.from.y - brushSource.height/2);
     } else {
-      for(i = 0; i < dist; i += increment/10){
+      for(let i = 0; i < dist; i += increment){
         ctx.drawImage(brushSource,  (value.from.x + sin * i) - brushSource.width/2, (value.from.y + cos * i) - brushSource.height/2);
       }
     }

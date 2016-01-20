@@ -42,7 +42,7 @@ class Scetch extends EventEmitter{
     pickerG.value = this.activeBrush.color.g;
     pickerB.value = this.activeBrush.color.b;
 
-    this.addEventListener('draw', (e) => {
+    this.on('draw', (e) => {
       let value = {
         brush: scetch.activeBrush.toObject(),
         roomName: scetch.roomName,
