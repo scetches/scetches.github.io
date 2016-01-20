@@ -11,6 +11,7 @@ class Scetch extends EventEmitter{
     this.userName = '';
     this.activeBrushId = 0;
     this.activeLayerId = 0;
+    this.totalSyncs = 0;
     this.mouseDown = false;
     this.activeBrush = new Brush('active');
 
@@ -58,7 +59,6 @@ class Scetch extends EventEmitter{
     });
 
     this.on('addlayer', e => {
-      console.log('')
       canvasContainer.appendChild(e.layerCanvas);
     });
 
@@ -117,13 +117,14 @@ class Scetch extends EventEmitter{
   }
 
   init(value){
-    body.className = 'loading';
+    body.className = 'connected loading';
     this.roomName = value.roomName;
     this.roomWidth = value.roomWidth;
     this.roomHeight = value.roomHeight;
-
     canvasContainerSizeFix.style.maxWidth = this.roomWidth + 'px';
     canvasContainerSizeFix.style.maxHeight = this.roomHeight + 'px';
+
+    this.totalSyncs = 0;
 
     canvasContainer.style.paddingBottom = this.roomHeight / this.roomWidth * 100 + '%';
 
@@ -131,9 +132,8 @@ class Scetch extends EventEmitter{
       this.removeLayer(layerId, this.layers[layerId]);
     }
     for(let layerId in value.layers){
-      this.addLayer(layerId, value.layers[layerId]);
+      let layer = this.addLayer(layerId, value.layers[layerId]);
     }
-    body.className = 'connected';
   }
 
   syncInfo(layerId){
@@ -147,6 +147,13 @@ class Scetch extends EventEmitter{
 
   addLayer(layerId, value){
     let layer = new Layer(layerId, this);
+    layer.once('sync', () => {
+      this.totalSyncs++;
+      layer.synced = true;
+      if(this.allLayersSynced()){
+        body.className = 'connected';
+      }
+    });
     if(value){
       layer.fromObject(value);
     }
@@ -155,10 +162,17 @@ class Scetch extends EventEmitter{
     return layer;
   }
 
+  allLayersSynced(){
+    return this.totalSyncs >= Object.keys(this.layers).length;
+  }
+
   removeLayer(layerId){
     let layer = this.layers[layerId];
     layerListContainer.removeChild(layer.li);
     canvasContainer.removeChild(layer.layerCanvas);
+    if(layer.synced){
+      this.totalSyncs--;
+    }
     delete this.layers[layerId];
     if(layerListContainer.getElementsByClassName('active').length == 0){
       let layerList = layerListContainer.getElementsByClassName('layer-item');
