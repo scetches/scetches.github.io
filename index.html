@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang='en' scroll>
+<head>
+  <title>scetches</title>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='description' content='Multi-user drawing application!'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+  <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+  <link rel='stylesheet' href='css/material.min.css'>
+  <script src='js/material.min.js'></script>
+  <link rel='stylesheet' href='css/main.css'>
+</head>
+<body class='loading'>
+  <button id='fab' class='mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored'>
+    <i class='material-icons'>add</i>
+  </button>
+  <div class='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
+    <header class='mdl-layout__header'>
+      <div class='mdl-layout__header-row'>
+        <!-- Title -->
+        <span class='mdl-layout-title'>scetches</span>
+        <!-- Add spacer, to align navigation to the right -->
+        <div class='mdl-layout-spacer'></div>
+        <!-- Navigation -->
+        <nav class='mdl-navigation'>
+          <a class='mdl-navigation__link' id='hide-header-button'>Hide</a>
+        </nav>
+      </div>
+    </header>
+    <div class='mdl-layout__drawer'>
+      <div id='toolBox'>
+        <!-- <ul id='savedBrushes'>
+        </ul> -->
+        <ul id='toolSlider'>
+          <li id='show-header-button'>
+            <div id='js-show-header-button' class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Show Header</div>
+          </li>
+          <li id='activeBrushContainer'>
+          </li>
+          <li>
+            <h3>Size</h3>
+            <input id='sizeRange' class='mdl-slider mdl-js-slider' type='range' min='2' max='256' step='2'>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' id='size' type='text' min='2' max='100'>
+              <label class='mdl-textfield__label' for='size'>Size</label>
+            </div>
+          </li>
+          <li>
+            <h3>Width</h3>
+            <input id='widthRange' class='mdl-slider mdl-js-slider' type='range' min='0.01' max='1' step='.01'>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' id='width' type='text' min='0.01' max='1'>
+              <label class='mdl-textfield__label' for='width'>Width</label>
+            </div>
+          </li>
+          <li>
+            <h3>Height</h3>
+            <input id='heightRange' class='mdl-slider mdl-js-slider' type='range' min='0.01' max='1' step='.01'>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' type='text' id='height' min='0.01' max='1'>
+              <label class='mdl-textfield__label' for='height'>Height</label>
+            </div>
+          </li>
+          <li>
+            <h3>Angle</h3>
+            <input id='angleRange' class='mdl-slider mdl-js-slider' type='range' min='0' max='360' step='1'>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' id='angle' type='text' min='0' max='360'>
+              <label class='mdl-textfield__label' for='angle'>Angle</label>
+            </div>
+          </li>
+          <li>
+            <h3>Edge Smoothing</h3>
+            <input id='edgeRange' class='mdl-slider mdl-js-slider' type='range' min='0.01' max='1' step='.01'>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' id='edge' type='text' min='0.01' max='360'>
+              <label class='mdl-textfield__label' for='edge'>Edge Smoothing</label>
+            </div>
+          </li>
+          <li>
+            <h3>Opacity</h3>
+            <input id='opacityRange' class='mdl-slider mdl-js-slider' type='range' min='0' max='1' step='.01'>
+
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' id='opacity' type='text' min='0' max='1'>
+              <label class='mdl-textfield__label' for='opacity'>Opacity</label>
+            </div>
+          </li>
+          <li id='pickerContainer'>
+          </li>
+          <li class='flex-container'>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' type='text' id='r' class='colorInput' min='0' max='255'>
+              <label class='mdl-textfield__label' for='r'>R</label>
+            </div>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' type='text' id='g' class='colorInput' min='0' max='255'>
+              <label class='mdl-textfield__label' for='g'>G</label>
+            </div>
+            <div class='mdl-textfield mdl-js-textfield'>
+              <input class='mdl-textfield__input' type='text' id='b' class='colorInput' min='0' max='255'>
+              <label class='mdl-textfield__label' for='b'>B</label>
+            </div>
+            <label id='mdlErase' class='mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect' for='erase'>
+              <input class='mdl-checkbox__input' type='checkbox' id='erase'>
+              <span class='mdl-checkbox__label'>Erase</span>
+            </label>
+          </li>
+          <li class='flex-container'>
+            <div id='addLayer' class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>+</div>
+            <div class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' id='removeLayer'>-</div>
+          </li>
+          <li>
+            <ul id='layerListContainer'>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <main class='mdl-layout__content mdl-color--grey-100'>
+      <div class='page-content'>
+        <div class='animate-container for-canvasContainer'>
+          <div id='canvasContainerSizeFix' class='mdl-card mdl-shadow--2dp'>
+            <div id='canvasContainer' >
+            </div>
+          </div>
+        </div>
+        <div class='animate-container for-lobby'>
+          <div id='lobby' class='mdl-card mdl-shadow--2dp'>
+            <div class='mdl-card__title'>
+              <h2 class='mdl-card__title-text'>Welcome!</h2>
+            </div>
+            <div class='mdl-card__supporting-text'>
+              <div class='mdl-textfield mdl-js-textfield'>
+                <input class='mdl-textfield__input' type='text' id='room'>
+                <label class='mdl-textfield__label' for='room'>Room Name</label>
+              </div>
+              <div class='mdl-textfield mdl-js-textfield'>
+                <input class='mdl-textfield__input' type='text' id='name'>
+                <label class='mdl-textfield__label' for='name'>User Name</label>
+              </div>
+            </div>
+            <div class='mdl-card__actions mdl-card--border'>
+              <div id='joinButton' class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Join!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src='24.113.64.254:8080/socket.io/socket.io.js'></script>
+  <script src='js/eventEmitter.js'></script>
+  <script src='js/brush.js'></script>
+  <script src='js/layer.js'></script>
+  <script src='js/scetch.js'></script>
+  <script src='js/picker.js'></script>
+  <script src='js/main.js'></script>
+</body>
+</html>
