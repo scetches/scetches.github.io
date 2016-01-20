@@ -47,6 +47,8 @@ let lastTouches = {};
 
 userNameInput.value = userName;
 roomNameInput.value = roomName;
+updateClasses(roomNameInput);
+updateClasses(userNameInput);
 
 let scetch = new Scetch();
 let picker = new Picker(20, pickerContainer);
@@ -92,10 +94,7 @@ removeLayerBtn.addEventListener('click', (e) => {
 });
 
 joinBtn.addEventListener('click', (e) => {
-  body.className = 'loading';
-  setTimeout(() => {
-    location.hash = roomNameInput.value;
-  }, 200);
+  location.hash = roomNameInput.value
 });
 
 fab.addEventListener('mousedown', fabMove, false);
@@ -170,6 +169,7 @@ userNameInput.addEventListener('keyup', (e) => {
 window.addEventListener('hashchange', () => {
   roomName = location.hash.slice(1);
   roomNameInput.value = roomName;
+  updateClasses(roomNameInput);
   joinRoom();
 });
 
@@ -263,11 +263,18 @@ function joinRoom(){
   userName = userNameInput.value;
   roomName = roomNameInput.value;
 
-  if(userName.length > 1 && roomName.length > 1){
-    socket.emit('join', {roomName: roomName, userName: userName});
+  if(userName.length > 1 && roomName.length > 0){
+    body.className = 'loading';
+    setTimeout(() => {
+      socket.emit('join', {roomName: roomName, userName: userName});
+    }, 200);
   } else {
     roomNameInput.value = roomName;
     userNameInput.value = userName;
+    updateClasses(roomNameInput);
+    updateClasses(userNameInput);
+
+    body.className = '';
   }
 }
 
@@ -340,6 +347,12 @@ function toggleFullScreen() {
   }
   else {
     cancelFullScreen.call(doc);
+  }
+}
+
+function updateClasses(e){
+  if(e.parentNode.MaterialTextfield){
+    e.parentNode.MaterialTextfield.updateClasses_();
   }
 }
 

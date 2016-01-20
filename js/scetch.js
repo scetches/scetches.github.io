@@ -27,7 +27,7 @@ class Scetch extends EventEmitter{
     settings.erase = false;
 
     this.activeBrush.fromObject(settings);
-    this.activeBrush.altColor = settings.altColor;
+    this.activeBrush.altColor = settings.altColor || this.activeBrush.color;
 
     activeBrushContainer.appendChild(this.activeBrush.canvas);
 
@@ -124,13 +124,11 @@ class Scetch extends EventEmitter{
     canvasContainerSizeFix.style.maxWidth = this.roomWidth + 'px';
     canvasContainerSizeFix.style.maxHeight = this.roomHeight + 'px';
 
-    this.totalSyncs = 0;
-
-    canvasContainer.style.paddingBottom = this.roomHeight / this.roomWidth * 100 + '%';
-
     for(let layerId in this.layers){
       this.removeLayer(layerId, this.layers[layerId]);
     }
+    this.totalSyncs = 0;
+    canvasContainer.style.paddingBottom = this.roomHeight / this.roomWidth * 100 + '%';
     for(let layerId in value.layers){
       let layer = this.addLayer(layerId, value.layers[layerId]);
     }
