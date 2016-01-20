@@ -42,6 +42,7 @@ const joinBtn = document.getElementById('joinButton');
 
 let roomName = location.hash.slice(1);
 let userName = localStorage.getItem('userName');
+let offset = canvasContainer.getBoundingClientRect();
 
 let lastTouches = {};
 
@@ -174,7 +175,9 @@ window.addEventListener('hashchange', () => {
 });
 
 window.addEventListener('resize', resetFab);
-
+window.addEventListener('resize', (e) => {
+  offset = canvasContainer.getBoundingClientRect();
+})
 socket.on('roomSync', (room) => {
   scetch.init(room);
   resetFab();
@@ -281,7 +284,6 @@ function joinRoom(){
 function canvasContainerOnTouch(e){
   e.preventDefault();
   if(fab.MaterialButton.element_.dataset.moving != 'true'){
-    let offset = e.target.getBoundingClientRect();
     for (let i = 0; i < e.changedTouches.length; i++) {
       let scale = e.target.width / (e.target.offsetWidth);
       let value = {

@@ -62,22 +62,31 @@ class Scetch extends EventEmitter{
       canvasContainer.appendChild(e.layerCanvas);
     });
 
-    document.addEventListener('mousemove', e => {
-      this.mouseDown = e.buttons > 0;
-    });
-    document.addEventListener('mousedown', e => {
-      this.mouseDown = e.buttons > 0;
-      for(let layerId in this.layers){
-        clearTimeout(this.layers[layerId].timeoutId);
-      }
-    });
-    document.addEventListener('mouseup', e => {
-      this.mouseDown = e.buttons > 0;
+    let mouseMove = e => {
+      this.mouseDown = e.buttons > 0 || e.type == 'touchmove';
+    };
+
+    let mouseUp = e => {
+      this.mouseDown = false;
       for(let layerId in this.layers){
         clearTimeout(this.layers[layerId].timeoutId);
         this.timeoutId = setTimeout(() => this.layers[layerId].syncCanvas(), 500);
       }
-    });
+    };
+
+    let mouseDown = e => {
+      this.mouseDown = true;
+      for(let layerId in this.layers){
+        clearTimeout(this.layers[layerId].timeoutId);
+      }
+    };
+
+    document.addEventListener('touchmove', mouseMove);
+    document.addEventListener('touchend', mouseDown);
+    document.addEventListener('touchstart', mouseUp);
+    document.addEventListener('mousemove', mouseMove);
+    document.addEventListener('mousedown', mouseDown);
+    document.addEventListener('mouseup', mouseUp);
 
     document.addEventListener('keyup', (e) =>{
       switch(e.keyCode){
