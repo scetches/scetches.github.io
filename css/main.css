@@ -1,11 +1,28 @@
 body {
   overflow: hidden; }
 
-.spinner {
-  visibility: hidden; }
+#spinner {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  display: flex;
+  background: white;
+  justify-content: space-around;
+  align-content: center;
+  -webkit-transition-duration: .4s;
+  transition-duration: .4s;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-property: top;
+  transition-property: top; }
+  #spinner .mdl-spinner {
+    margin: auto; }
 
-.loading .spinner {
-  visibility: visible; }
+.loading #spinner {
+  top: 0; }
 
 .is-small-screen #lobby .mdl-card__title {
   display: none; }
