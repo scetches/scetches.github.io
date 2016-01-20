@@ -185,7 +185,10 @@ socket.on('step', (step) => {
 socket.on('requestSync', value => socket.emit('syncCheck', value));
 
 socket.on('syncSuccess', (value, callback) => {
-  scetch.layers[value.layerId].once('sync', () => callback(scetch.syncInfo(value.layerId)))
+  scetch.layers[value.layerId].once('sync', () => {
+    callback(scetch.syncInfo(value.layerId))
+    body.className = '';
+  });
 });
 
 socket.on('addLayer', (data)=>{
@@ -259,7 +262,6 @@ function joinRoom(){
   } else {
     roomNameInput.value = roomName;
     userNameInput.value = userName;
-    body.className = '';
   }
 }
 
